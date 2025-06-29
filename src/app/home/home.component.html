@@ -1,0 +1,113 @@
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+  <div class="container">
+    <div class="mx-auto border border-grey border-5 shadow-sm bg-white"
+      style="max-width: 100%; width: 100%; max-width: 900px;">
+      <app-header></app-header>
+
+      <div class="input-group p-3">
+        <input type="text" class="form-control border-5 border-3 rounded-0 shadow-none"
+          placeholder="Buscar por nome, número, apelido ou endereço..." [(ngModel)]="termoBusca"
+          (keyup.enter)="buscar()" />
+        <button class="btn btn-primary rounded-0 border-grey border-5 border-3" style="border-color:#e0e0e0;"
+          (click)="buscar()">
+          Buscar
+        </button>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3 px-3">
+        <button type="submit" class="btn btn-primary rounded-0 border-5 border-3" [routerLink]="['/novocontato']"
+          style="border-color:#e0e0e0;">
+          Novo Contato
+        </button>
+
+        <div class="d-flex align-items-center">
+          <div class="dropdown me-3">
+            <a class="btn text-white bg-primary border-5 border-3 rounded-0" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false" style="border-color:#e0e0e0;">
+              {{ tiposelecionado ? tiposelecionado : 'Tipo' }}
+            </a>
+            <ul class="dropdown-menu bg-primary border-5 border-3 rounded-0"
+              style="border-color:#e0e0e0;cursor: pointer;">
+              <li><a class="dropdown-item text-white" (click)="filtrarPorTipo('')">Todos</a></li>
+              <li><a class="dropdown-item text-white" (click)="filtrarPorTipo('Familia')">Familia</a></li>
+              <li><a class="dropdown-item text-white" (click)="filtrarPorTipo('Trabalho')">Trabalho</a></li>
+              <li><a class="dropdown-item text-white" (click)="filtrarPorTipo('Faculdade')">Faculdade</a></li>
+              <li><a class="dropdown-item text-white" (click)="filtrarPorTipo('Amigos')">Amigos</a></li>
+            </ul>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-primary rounded-0 border-5 border-3 text-white" style="border-color:#e0e0e0;"
+              (click)="ordenarPor('fullname')">
+              A-Z
+            </button>
+            <button class="btn btn-primary rounded-0 border-5 border-3 text-white" style="border-color:#e0e0e0;"
+              (click)="ordenarPor('email')">
+              Email
+            </button>
+            <button class="btn btn-primary rounded-0 border-5 border-3 text-white" style="border-color:#e0e0e0;"
+              (click)="carregarFavoritosOrdenados('fullname')">
+              Favoritos
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="p-3" style="min-height: 300px;">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Apelido</th>
+                <th scope="col">Nome</th>
+                <th scope="col" *ngIf="mostrarTipo">Tipo</th>
+                <th scope="col" *ngIf="mostrarEmail">Email</th>
+                <th scope="col">Número</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+              <tr *ngFor="let c of contatosPaginados" [routerLink]="['/contato', c.id]" style="cursor: pointer;"
+                [hidden]="!c.number">
+                <th scope="row">{{c.nickname}}</th>
+                <td>{{c.fullname}}</td>
+                <td *ngIf="mostrarTipo">{{ c.type }}</td>
+                <td *ngIf="mostrarEmail">{{ c.email }}</td>
+                <td>{{c.number}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <nav *ngIf="contatosFiltrados.length > 0">
+            <ul class="pagination justify-content-center m-0">
+              <li class="page-item" [class.disabled]="paginaAtual === 1">
+                <button class="page-link border-5 border-3 rounded-0 px-3 py-1 text-white bg-primary"
+                  style="border-color:#e0e0e0;" (click)="mudarPagina(paginaAtual - 1)">
+                  ◄
+                </button>
+              </li>
+
+              <li class="page-item" *ngFor="let pagina of totalPaginas()" [class.active]="pagina === paginaAtual">
+                <button class="page-link border-5 border-3 rounded-0 px-3 py-1 text-white bg-primary"
+                  style="border-color:#e0e0e0;" (click)="mudarPagina(pagina)">
+                  {{ pagina }}
+                </button>
+              </li>
+
+              <li class="page-item" [class.disabled]="paginaAtual === totalPaginas().length">
+                <button class="page-link border-5 border-3 rounded-0 px-3 py-1 text-white bg-primary"
+                  style="border-color:#e0e0e0;" (click)="mudarPagina(paginaAtual + 1)">
+                  ►
+                </button>
+              </li>
+            </ul>
+          </nav>
+
+        </div>
+        <div class="p-3 d-flex justify-content-center align-items-center min-vh-50" *ngIf="contato.length === 0">
+          <p class="text-muted">Nenhum Contato Encontrado</p>
+        </div>
+
+      </div>
+      <app-footer></app-footer>
+    </div>
+  </div>
+</div>

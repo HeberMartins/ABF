@@ -1,0 +1,105 @@
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+  <div class="container">
+    <div class="mx-auto border border-grey border-5 shadow-sm bg-white" style="max-width: 900px; width: 100%;">
+      <app-header></app-header>
+      <div *ngIf="selectedContato">
+        <img *ngIf="selectedContato.type === 'Familia'"
+          src="https://images.icon-icons.com/5/PNG/256/AltMSN_messenger_user_157.png" alt="Familia"
+          class="mx-auto d-block mb-3" style="max-width: 150px;">
+        <img *ngIf="selectedContato.type === 'Trabalho'"
+          src="https://images.icon-icons.com/187/PNG/256/fichier_images_JPEG__22818.png" alt="Trabalho"
+          class="mx-auto d-block mb-3" style="max-width: 150px;">
+        <img *ngIf="selectedContato.type === 'Faculdade'" src="https://images.icon-icons.com/187/PNG/256/MSn_Baggs_22823.png"
+          alt="Faculdade" class="mx-auto d-block mb-3" style="max-width: 150px;">
+        <img *ngIf="selectedContato.type === 'Amigos'"
+          src="https://images.icon-icons.com/5/PNG/256/MSN_messenger_user_156.png" alt="Amigos"
+          class="mx-auto d-block mb-3" style="max-width: 150px;">
+      </div>
+      <h2 class="text-center">{{ selectedContato?.fullname }}</h2>
+      <div *ngIf="selectedContato" class="container mt-4">
+        <h2 class="text-center mb-4">Detalhes do Contato</h2>
+
+        <form [formGroup]="formGroupContato" class="mx-auto" style="max-width: 500px;">
+          <div *ngFor="let field of editableFields" class="mb-3">
+            <label [for]="field.name" class="form-label">{{ field.label }}:</label>
+
+            <ng-container [ngSwitch]="field.type">
+              <ng-container *ngSwitchCase="'text'">
+                <input [id]="field.name" [formControlName]="field.name" [placeholder]="field.label"
+                  class="form-control border-5 border-3 rounded-0 shadow-none"
+                  [readonly]="fieldEditing[field.name] !== true" type="text">
+              </ng-container>
+
+              <ng-container *ngSwitchCase="'phone'">
+                <input [id]="field.name" [formControlName]="field.name" [placeholder]="field.label"
+                  mask="(00)00000-0000" [dropSpecialCharacters]="false" id="inputNumber"
+                  class="form-control border-5 border-3 rounded-0 shadow-none"
+                  [readonly]="fieldEditing[field.name] !== true" type="phone">
+              </ng-container>
+
+              <ng-container *ngSwitchCase="'email'">
+                <input [id]="field.name" [formControlName]="field.name" [placeholder]="field.label"
+                  class="form-control border-5 border-3 rounded-0 shadow-none"
+                  [readonly]="fieldEditing[field.name] !== true" type="email">
+              </ng-container>
+
+              <ng-container *ngSwitchCase="'date'">
+                <input [id]="field.name" [formControlName]="field.name"
+                  class="form-control border-5 border-3 rounded-0 shadow-none"
+                  [readonly]="fieldEditing[field.name] !== true" type="date">
+              </ng-container>
+
+              <ng-container *ngSwitchCase="'select'">
+                <ng-container *ngIf="field.name === 'type'; else selectDefault">
+                  <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownTipo"
+                      data-bs-toggle="dropdown" aria-expanded="false" style="min-width: 150px;">
+                      {{ formGroupContato.get('type')?.value || 'Tipo' }}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownTipo">
+                      <li><a class="dropdown-item" href="#" (click)="selectType('Familia', $event)">Familia</a></li>
+                      <li><a class="dropdown-item" href="#" (click)="selectType('Trabalho', $event)">Trabalho</a></li>
+                      <li><a class="dropdown-item" href="#" (click)="selectType('Faculdade', $event)">Faculdade</a></li>
+                      <li><a class="dropdown-item" href="#" (click)="selectType('Amigos', $event)">Amigos</a></li>
+                    </ul>
+                  </div>
+                </ng-container>
+                <ng-template #selectDefault>
+                  <select [id]="field.name" [formControlName]="field.name"
+                    class="form-select border-5 border-3 rounded-0 shadow-none"
+                    [disabled]="fieldEditing[field.name] !== true">
+                    <option [value]="true">Sim</option>
+                    <option [value]="false">Não</option>
+                  </select>
+                </ng-template>
+              </ng-container>
+            </ng-container>
+          </div>
+
+        </form>
+
+        <div class="text-center mt-4">
+          <button class="btn btn-primary me-2" (click)="enableAllEdits()">Editar Contato</button>
+          <button class="btn btn-danger" *ngIf="excluir" (click)="delete(selectedContato)">Excluir</button>
+          <button class="btn btn-danger ms-2" *ngIf="IsEditing" (click)="cancelar()">Cancelar</button>
+          <button class="btn btn-primary ms-2" *ngIf="IsEditing" (click)="update()">Salvar</button>
+          <button type="submit" class="btn btn-primary ms-2 rounded-0 border-5 border-3" [routerLink]="['/home']"
+            style="border-color:#e0e0e0;">
+            Voltar
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="!selectedContato" class="text-center mt-5">
+        <p>Nenhum contato selecionado</p>
+        <button type="submit" class="btn btn-primary ms-2 rounded-0 border-5 border-3" [routerLink]="['/home']"
+          style="border-color:#e0e0e0;">
+          Voltar
+        </button>
+      </div>
+
+
+      <app-footer></app-footer>
+    </div>
+  </div>
+</div>
