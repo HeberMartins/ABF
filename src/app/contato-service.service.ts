@@ -7,8 +7,8 @@ import { Contato } from '../contato';
   providedIn: 'root'
 })
 export class ContatoServiceService {
-  private readonly baseUrl = 'http://localhost:8080/contato';
-  apiUrl = 'http://localhost:8080/contato';
+  private readonly baseUrl = 'http://addressbookbe.duckdns.org/contato';
+  apiUrl = 'http://addressbookbe.duckdns.org/contato';
   constructor(private http: HttpClient) { }
 
 getAll(): Observable<Contato[]> {
