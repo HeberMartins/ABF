@@ -7,7 +7,7 @@ import { Contato } from '../contato';
   providedIn: 'root'
 })
 export class ContatoServiceService {
-  private readonly baseUrl = 'https://abb-backend.duckdns.org/contato';
+  private readonly baseUrl = 'https://abbackend.duckdns.org/';
   apiUrl = 'https://addressbookbe.duckdns.org/contato';
   constructor(private http: HttpClient) { }
 
